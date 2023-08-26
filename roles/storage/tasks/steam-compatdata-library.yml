@@ -1,0 +1,22 @@
+---
+- name : Check if old compatdata exists
+  ansible.builtin.stat:
+    path: "{{ libary_path }}/steamapps/compatdata"
+  register: compatdata_dir
+- name: Copy old compatdata
+  when: compatdata_dir.stat.exists
+  ansible.builtin.shell:
+    cmd: rsync -azhP --out-format='%n' "{{ libary_path }}/steamapps/compatdata/" "{{ user_home }}/.steam/steam/steamapps/compatdata/"
+  register: copy_result
+  changed_when: copy_result.stdout_lines | length > 1
+- name: Delete old compatdata
+  when: compatdata_dir.stat.exists
+  ansible.builtin.command:
+    cmd: rm -rf "{{ libary_path }}/steamapps/compatdata/"
+- name: Create symlinks
+  ansible.builtin.file:
+    src: ~/.steam/steam/steamapps/compatdata
+    dest: "{{ libary_path }}/steamapps/compatdata"
+    state: link
+    owner: "{{ lookup('env', 'USER') }}"
+    group: "{{ lookup('env', 'USER') }}"

@@ -1,0 +1,13 @@
+---
+- name: Setup
+  hosts: all
+  roles:
+    - role: storage
+    - role: applications
+    - role: git
+    - role: ableton.nix
+      vars:
+        nix_flakes: true
+        nix_user: "{{ secret_username }}"
+    - role: oh-my-zsh
+    - role: dotfiles

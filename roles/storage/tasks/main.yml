@@ -1,0 +1,27 @@
+---
+- name: Setup mount points
+  tags: storage
+  block:
+  - name: Mount external disk
+    become: true
+    with_items: "{{ mounts }}"
+    ansible.builtin.mount:
+      src: "{{ item.src }}"
+      path: "{{ item.path }}"
+      fstype: "{{ item.fstype }}"
+      opts: "{{ item.opts | default(omit) }}"
+      state: mounted
+      boot: true
+  - name: Ensure Steam compatdata dir exists
+    ansible.builtin.file:
+      path: "{{ user_home }}/.steam/steam/steamapps/compatdata"
+      state: directory
+      owner: "{{ lookup('env', 'USER') }}"
+      group: "{{ lookup('env', 'USER') }}"
+  - name: Setup Steam compatdata
+    with_items: "{{ mounts | selectattr('steam_libraries', 'defined') }}"
+    ansible.builtin.include_tasks:
+      file: steam-compatdata.yml
+      apply:
+        vars:
+          libraries: "{{ item.steam_libraries }}"

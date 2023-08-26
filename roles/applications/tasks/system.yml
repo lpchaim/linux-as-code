@@ -1,0 +1,19 @@
+---
+- name: Get OS family
+  ansible.builtin.shell:
+    cmd: >-
+      cat /etc/os-release
+      | grep ^ID
+      | awk --field-separator "=" '{gsub(/(^"|"$)/, "", $2); print $2}'
+      | paste -sd ' '
+  register: family
+- name: Install system applications [RHEL]
+  ansible.builtin.dnf:
+    name: "{{ applications_system | default([]) }}"
+    state: latest
+  when: '"rhel" in family.stdout'
+- name: Install system applications [Debian]
+  ansible.builtin.apt:
+    name: "{{ applications_system | default([]) }}"
+    state: latest
+  when: '"debian" in family.stdout'

@@ -1,0 +1,12 @@
+---
+- name: Install applications
+  tags: app
+  block:
+    - ansible.builtin.include_tasks:
+        file: system.yml
+        apply:
+          become: true
+    - ansible.builtin.include_tasks:
+        file: flatpaks-user.yml
+        apply:
+          become: false
