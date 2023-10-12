@@ -1,0 +1,7 @@
+mounts:
+  - src: UUID=7C4C7B584C7B0BE0
+    path: /media/data1
+    fstype: ntfs
+    opts: defaults,nofail,uid=1000,gid=1000,rw,user,exec,umask=000
+    steam_libraries:
+      - Games/Steam

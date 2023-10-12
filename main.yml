@@ -1,8 +1,9 @@
 ---
-- name: Minimal setup
-  hosts: all
+- name: Base setup
+  hosts:
+    - all
   roles:
-    - zsh
+    - name: zsh
     - name: git
       vars:
         git_name: "{{ secret_fullname }}"
@@ -13,9 +14,16 @@
         key_host: github.com
         public: "{{ secret_git_key_public }}"
         private: "{{ secret_git_key_private }}"
-    - nix
+    - name: nix
     - name: home-manager
       vars:
         editor: vim
         git_name: "{{ secret_fullname }}"
         git_email: "{{ secret_email }}"
+- name: Daily-driver specifics
+  hosts:
+    - daily-driver
+  roles:
+    - name: storage-personal
+    - name: flatpaks
+    - name: applications
