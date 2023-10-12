@@ -1,8 +1,6 @@
 # PC as Code
 
-<p align="center">
 Declarative deployment powered by [Ansible] and [Nix]
-</p>
 
 ## What is this about?
 I've been working towards a fully declarative userspace setup for some time now. I do a significant amount of development on remote, sometimes short-lived environments and, honestly, I don't want to ever run a install script again if I can help it. Although I'm not fully there yet because of a few hard to tame dependencies (looking at you, neovim plugins!), [Nix] and [Home Manager] have all but gotten me to the coveted 100% declarative holy grail.
