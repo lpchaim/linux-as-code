@@ -1,0 +1,5 @@
+flatpaks_user:
+  - com.bitwarden.desktop
+  - com.google.Chrome
+  - com.spotify.Client
+  - org.gnome.World.PikaBackup
