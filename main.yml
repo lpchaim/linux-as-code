@@ -2,7 +2,7 @@
 - name: Setup
   hosts: all
   roles:
-    - role: storage
+    - role: storage-personal
     - role: applications
     - role: git
     - role: ableton.nix
