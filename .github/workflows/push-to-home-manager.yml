@@ -30,7 +30,7 @@ jobs:
         run: echo '${{ secrets.ANSIBLE_VAULT }}"' > group_vars/all/vault.yml
       - name: Write vault password
         working-directory: thisRepo
-        run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault_password.txt
+        run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault_password
       - name: Generate Home Manager configuration
         working-directory: thisRepo
         run: >
