@@ -1,4 +1,4 @@
-name: Push generated config to Home Manager repo
+name: Test and push to Home Manager repo
 
 on:
   workflow_dispatch:
@@ -9,22 +9,6 @@ on:
 jobs:
   test:
     name: Test Home Manager config generation
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-      - name: Setup nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: Write encrypted Ansible vault
-        run: echo ${{ secrets.ANSIBLE_VAULT }} > group_vars/all/vault.yml
-      - name: Write vault password
-        run: echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > .vault_password.txt
-      - name: Install Home Manager and generate config
-        run: nix-shell --run "ansible-playbook main.yml --inventory=inventory/localhost.yml --tags home-manager"
-  deploy:
-    name: Deploy generated configuration
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout this repo
@@ -42,17 +26,28 @@ jobs:
       - name: Setup nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Write encrypted Ansible vault
-        run: echo ${{ secrets.ANSIBLE_VAULT }} > group_vars/all/vault.yml
+        working-directory: thisRepo
+        run: echo '${{ secrets.ANSIBLE_VAULT }}"' > group_vars/all/vault.yml
       - name: Write vault password
-        run: echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > .vault_password.txt
+        working-directory: thisRepo
+        run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault_password.txt
       - name: Generate Home Manager configuration
         working-directory: thisRepo
         run: >
-            nix-shell --run "ansible-playbook main.yml
-            --inventory=inventory/localhost.yml 
+            nix-shell --run "
+            ansible-playbook main.yml
+            --inventory inventory/localhost.yml
             --tags home-manager
-            --skip-tags no-ci"
-            --extra-vars="home_manager_root='${{ github.workspace }}/destinationRepo'"
+            --extra-vars home_manager_root='${{ github.workspace }}/destinationRepo'
+            "
+  deploy:
+    needs: test
+    name: Deploy generated configuration
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Remove unnecessary files
+        working-directory: destinationRepo
+        run: rm home.nix flake.nix flake.lock
       - name: Commit new configuration
         id: commit
         working-directory: destinationRepo
