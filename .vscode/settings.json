@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        ".github/workflows/**/*.yml": "github-actions-workflow",
         "*.yml": "ansible"
     },
 }
