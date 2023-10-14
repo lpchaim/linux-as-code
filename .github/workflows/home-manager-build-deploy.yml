@@ -57,8 +57,8 @@ jobs:
       - name: Commit new configuration
         id: commit
         run: |
-          git config --local user.email "{{ $USER_EMAIL }}"
-          git config --local user.name "{{ $USER_NAME }}"
+          git config --local user.email "$USER_EMAIL"
+          git config --local user.name "$USER_NAME"
           git add .
           git commit --message "chore: Update Home Manager"
       - name: Push changes
@@ -68,3 +68,4 @@ jobs:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: lpchaim/home-manager
           branch: ${{ github.head_ref }}
+          force: true
