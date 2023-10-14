@@ -2,6 +2,8 @@
 - name: Gather custom facts
   hosts:
     - all
+  tags:
+    - always
   roles:
     - name: custom-facts
 - name: Initial setup
