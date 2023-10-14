@@ -40,6 +40,7 @@ jobs:
             --inventory inventory/localhost.yml
             --tags home-manager
             --extra-vars home_manager_root='${{ github.workspace }}/destinationRepo'
+            -vv
             "
   deploy:
     needs: build
