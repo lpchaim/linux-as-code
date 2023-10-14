@@ -44,6 +44,8 @@ jobs:
     needs: build
     name: Deploy generated configuration
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout destination repo
         uses: actions/checkout@v3
