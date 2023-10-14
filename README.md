@@ -1,4 +1,4 @@
-# PC as Code
+# Linux as Code
 
 Declarative deployment powered by [Ansible] and [Nix]
 
