@@ -28,7 +28,7 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Write encrypted Ansible vault
         working-directory: thisRepo
-        run: echo '${{ secrets.ANSIBLE_VAULT }}"' > group_vars/all/vault.yml
+        run: echo '${{ secrets.ANSIBLE_VAULT }}' > group_vars/all/vault.yml
       - name: Write vault password
         working-directory: thisRepo
         run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault-password
