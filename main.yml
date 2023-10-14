@@ -1,28 +1,46 @@
 ---
-- name: Base setup
+- name: Gather custom facts
   hosts:
     - all
+  roles:
+    - name: custom-facts
+- name: Initial setup
+  hosts:
+    - all
+  tags:
+    - never
+    - setup
+    - initial
   roles:
     - name: zsh
     - name: git
       vars:
         git_name: "{{ secret_fullname }}"
         git_email: "{{ secret_email }}"
+    - name: nix
+- name: Base configs
+  hosts:
+    - all
+  tags:
+    - config
+    - base
+  roles:
     - name: keypair
       vars:
         key_name: github
         key_host: github.com
         public: "{{ secret_git_key_public }}"
         private: "{{ secret_git_key_private }}"
-    - name: nix
     - name: home-manager
       vars:
-        editor: vim
         git_name: "{{ secret_fullname }}"
         git_email: "{{ secret_email }}"
-- name: Daily-driver specifics
+- name: Extra daily driver configs
   hosts:
     - daily-driver
+  tags:
+    - config
+    - extra
   roles:
     - name: storage-personal
     - name: flatpaks
