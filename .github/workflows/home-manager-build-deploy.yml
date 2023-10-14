@@ -11,17 +11,11 @@ jobs:
     name: Build Home Manager config
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout this repo
+      - name: Checkout repo
         uses: actions/checkout@v3
         with:
           path: thisRepo
           submodules: recursive
-      - name: Checkout destination repo
-        uses: actions/checkout@v3
-        with:
-          repository: lpchaim/home-manager
-          ref: ${{ github.head_ref }}
-          path: destinationRepo
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Setup nix cache
@@ -39,49 +33,30 @@ jobs:
             ansible-playbook main.yml
             --inventory inventory/localhost.yml
             --tags home-manager
-            --extra-vars home_manager_root='${{ github.workspace }}/destinationRepo'
+            --extra-vars home_manager_root='${{ github.workspace }}/build'
             "
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
   deploy:
     needs: build
     name: Deploy generated configuration
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout this repo
-        uses: actions/checkout@v3
-        with:
-          path: thisRepo
-          submodules: recursive
       - name: Checkout destination repo
         uses: actions/checkout@v3
         with:
           repository: lpchaim/home-manager
           ref: ${{ github.head_ref }}
-          path: destinationRepo
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-      - name: Setup nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: Write encrypted Ansible vault
-        working-directory: thisRepo
-        run: echo '${{ secrets.ANSIBLE_VAULT }}' > group_vars/all/vault.yml
-      - name: Write vault password
-        working-directory: thisRepo
-        run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault-password
-      - name: Generate Home Manager configuration
-        working-directory: thisRepo
-        run: >
-            nix-shell --run "
-            ansible-playbook main.yml
-            --inventory inventory/localhost.yml
-            --tags home-manager
-            --skip-tags no-ci
-            --extra-vars home_manager_root='${{ github.workspace }}/destinationRepo'
-            "
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
       - name: Commit new configuration
         id: commit
-        working-directory: destinationRepo
         run: |
-          cd ~/.config/home-manager
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -a -m "chore: Update Home Manager"
@@ -92,4 +67,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lpchaim/home-manager
           branch: ${{ github.head_ref }}
-          directory: destinationRepo
