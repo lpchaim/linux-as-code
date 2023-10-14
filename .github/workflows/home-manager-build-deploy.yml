@@ -57,8 +57,8 @@ jobs:
       - name: Commit new configuration
         id: commit
         run: |
-          git config --local user.email "${{ env.USER_EMAIL }}"
-          git config --local user.name "${{ env.USER_NAME }}"
+          git config --local user.email "${{ vars.USER_EMAIL }}"
+          git config --local user.name "${{ vars.USER_NAME }}"
           git add .
           git commit --message "chore: Update Home Manager"
       - name: Push changes
