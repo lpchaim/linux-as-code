@@ -9,7 +9,7 @@ mkShell {
     nixpkgs-fmt
   ];
   shellHook = ''
-    export LC_ALL="C.UTF-8";
-    ansible-galaxy collection install -r requirements.yml > /dev/null;
+    export LC_ALL="C.UTF-8"
+    ansible-galaxy collection install -r requirements.yml > /dev/null
   '';
 }
