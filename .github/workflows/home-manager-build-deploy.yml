@@ -57,15 +57,15 @@ jobs:
       - name: Commit new configuration
         id: commit
         run: |
-          git config --local user.email "${{ vars.USER_EMAIL }}"
-          git config --local user.name "${{ vars.USER_NAME }}"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add .
           git commit --message "chore: Update Home Manager"
       - name: Push changes
         if: steps.commit.conclusion == 'success'
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lpchaim/home-manager
           branch: ${{ github.head_ref }}
           force: true
