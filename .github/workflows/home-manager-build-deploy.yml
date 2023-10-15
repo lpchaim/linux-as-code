@@ -6,6 +6,8 @@ on:
     branches:
       - main
 
+permissions: write-all
+
 jobs:
   build:
     name: Build Home Manager config
@@ -44,8 +46,6 @@ jobs:
     needs: build
     name: Deploy generated configuration
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout destination repo
         uses: actions/checkout@v3
