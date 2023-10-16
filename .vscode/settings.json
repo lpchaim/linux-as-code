@@ -3,4 +3,5 @@
         ".github/workflows/**/*.yml": "github-actions-workflow",
         "*.yml": "ansible"
     },
+    "ansible.python.interpreterPath": "/nix/store/1qjxphxqlhp7s94ifmi7d64v45anf4bg-python3-3.11.4-env/bin/python3.11",
 }

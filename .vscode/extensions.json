@@ -1,0 +1,6 @@
+{
+	"recommendations": [
+		"redhat.ansible",
+		"github.vscode-github-actions",
+	],
+}
