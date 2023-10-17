@@ -1,0 +1,83 @@
+name: Build and release develop branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    name: Build Home Manager config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Setup nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Write encrypted Ansible vault
+        run: echo '${{ secrets.ANSIBLE_VAULT }}' > group_vars/all/vault.yml
+      - name: Write vault password
+        run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault-password
+      - name: Generate Home Manager configuration
+        run: >
+            nix-shell --run "
+            ansible-playbook main.yml
+            --inventory inventory/localhost.yml
+            --tags home-manager
+            --extra-vars home_path_override='${{ github.workspace }}/dotfiles'
+            "
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotfiles
+          path: dotfiles
+  release:
+    needs:
+      - build
+    outputs:
+      releases_created: ${{ steps.release-please.outputs.releases_created }}
+      tag: ${{ steps.release-please.outputs.tag_name }}
+      upload_url: ${{ steps.release-please.outputs.upload_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release-please
+        with:
+          release-type: simple
+          package-name: release-please-action
+          prerelease: ${{ (github.head_ref || github.ref_name) != 'main' }} 
+  dotfiles:
+    needs:
+      - build
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dotfiles
+      - name: Create zip file
+        run: |
+          nix-shell --packages zip --run --
+          zip dotfiles.zip . \
+            -x \
+              '.config/home-manager/home.nix'
+              '.config/home-manager/flake*'
+              '.cache*'
+              '.local*' 
+              '.nix*'
+      - name: Upload dotfiles
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          nix-shell --packages gh --run --
+          gh release upload \
+            ${{ needs.release.outputs.tag }} \
+            ./dotfiles.iso-path }} \
+            --repo ${{ github.repository_owner }}/${{ github.event.repository.name }} \
+            --clobber
