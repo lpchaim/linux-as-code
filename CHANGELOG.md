@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/lpchaim/linux-as-code/compare/v1.0.0...v1.1.0) (2023-10-18)
+
+
+### Features
+
+* Change push action tag ([9c18232](https://github.com/lpchaim/linux-as-code/commit/9c18232630c5a6a0c52b97b1f467ddd3bb761d7d))
+
 ## 1.0.0 (2023-10-15)
 
 
