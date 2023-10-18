@@ -24,17 +24,17 @@ jobs:
       - name: Write vault password
         run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault-password
       - name: Generate Home Manager configuration
-        run: >
-            nix-shell --run "
+        run: |
+            nix-shell --run --
             ansible-playbook main.yml
             --inventory inventory/localhost.yml
             --tags home-manager
-            "
+            --extra-vars "home_path_override='${{ github.workspace }}/dotfiles'"
       - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dotfiles
-          path: $HOME
+          path: "${{ github.workspace }}"
   release:
     needs:
       - build
