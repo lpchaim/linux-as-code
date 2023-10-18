@@ -3,4 +3,5 @@
         ".github/workflows/**/*.yml": "github-actions-workflow",
         "*.yml": "ansible"
     },
+    "ansible.python.interpreterPath": "",
 }
