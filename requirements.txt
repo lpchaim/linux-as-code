@@ -68,7 +68,7 @@ tenacity==8.2.2
 textfsm==1.1.2
 ttp==0.9.5
 typing_extensions==4.7.1
-urllib3==1.26.17
+urllib3==1.26.18
 xmltodict==0.13.0
 yangson==1.4.18
 yarl==1.9.2
