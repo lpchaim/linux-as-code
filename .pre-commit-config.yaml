@@ -1,0 +1,19 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+  - repo: https://github.com/IamTheFij/ansible-pre-commit 
+    rev: v1.0.0
+    hooks:
+      - id: encryption-check
+  - repo: https://github.com/nix-community/nixpkgs-fmt 
+    rev: v1.3.0
+    hooks:
+      - id: nixpkgs-fmt
+    
+    

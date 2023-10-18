@@ -6,4 +6,3 @@ all:
       vars:
         ansible_connection: local
         ansible_user: "{{ secret_username }}"
-        ansible_become_password: "{{ secret_password }}"
