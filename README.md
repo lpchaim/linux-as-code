@@ -13,7 +13,8 @@ Previous iterations have been worked on in private, but I've finally cleaned it 
 Bare minimum CLI-oriented features I always want at hand, powered by [Home Manager]. The associated configuration used to be a part of this project, but quickly became complex enough that it now lives on [its own repository][hmrepo]. As a bonus, a static version of the [Home Manager] configuration can now be quite easily [downloaded](https://github.com/lpchaim/home-manager/releases/latest) and used in standalone fashion.
 
 - [x] CLI
-  - [x] Basic productivity and development tools, see more [here][hmrepo]
+  - [x] Editors, basic utilities and development tools
+  - [x] See more [here][hmrepo]
 - [x] Git
   - [x] Default user name and email
   - [x] Deployment of specified GitHub SSH keys
