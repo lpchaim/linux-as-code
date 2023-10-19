@@ -1,8 +1,12 @@
-name: Release please
+name: Create release
 
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows:
+      - build
+    types:
+      - completed
     branches:
       - main
 

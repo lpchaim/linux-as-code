@@ -1,0 +1,37 @@
+name: Build Home Manager
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          path: thisRepo
+          submodules: recursive
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Setup nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Write encrypted Ansible vault
+        working-directory: thisRepo
+        run: echo '${{ secrets.ANSIBLE_VAULT }}' > group_vars/all/vault.yml
+      - name: Write vault password
+        working-directory: thisRepo
+        run: echo '${{ secrets.ANSIBLE_VAULT_PASSWORD }}' > .vault-password
+      - name: Generate Home Manager configuration
+        working-directory: thisRepo
+        run: >
+            nix-shell --run "
+            ansible-playbook main.yml
+            --inventory inventory/localhost.yml
+            --tags home-manager
+            --extra-vars home_manager_root='${{ github.workspace }}/build'
+            "
