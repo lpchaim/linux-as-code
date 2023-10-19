@@ -10,14 +10,10 @@ My end goal was to have a setup I could point at a new SSH-accessible machine an
 Previous iterations have been worked on in private, but I've finally cleaned it up enough that I'm comfortable with it now living in a public repository. I've learned a lot from the examples of others so I think it's only right.
 
 ## Base Features
-Bare minimum CLI-oriented features I always want at hand
+Bare minimum CLI-oriented features I always want at hand, powered by [Home Manager]. The associated configuration used to be a part of this project, but quickly became complex enough that it now lives on [its own repository][hmrepo]. As a bonus, a static version of the [Home Manager] configuration can now be quite easily [downloaded](https://github.com/lpchaim/home-manager/releases/latest) and used in standalone fashion.
+
 - [x] CLI
-  - [x] Select [Nerd Fonts] for patched fonts with extra glyphs
-  - [x] Productivity and QoL tools such as htop, mcfly, tldr, ripgrep and zoxide
-  - [x] Text editors: vim, neovim, kakoune and helix <sub>Why, yes, I *have* been experimenting with modal editors, how could you tell?</sub>
-  - [x] ZSH with oh-my-zsh plugins
-  - [x] [Nushell](https://www.nushell.sh/)
-  - [x] Starship prompt
+  - [x] Basic productivity and development tools, see more [here][hmrepo]
 - [x] Git
   - [x] Default user name and email
   - [x] Deployment of specified GitHub SSH keys
@@ -31,6 +27,9 @@ Those are intended for daily driver machines and include GUI applications and st
   - [ ] [Home Manager] managed
   - [x] Flatpak installs
   - [x] System-level applications for things Flatpaks aren't able to handle well or at all
+- [ ] Desktop Environments
+  - [ ] KDE Plasma
+  - [ ] Gnome
 - [ ] Borg backups
 
 ## How it works
@@ -42,18 +41,21 @@ It does so by using Ansible to deploy Nix through the [Determinate Nix Installer
 
 <details>
 <summary>Requirements</summary>
-If you have [Nix] installed, running the following command should get you a development shell with all the dependencies you'll need
+If you have Nix installed, running the following command should get you into a development shell with all the dependencies you'll need. It also supports direnv for automated nix shell loading.
+
 ```sh
 nix-shell
 ```
 
 Otherwise, try your hand at manually installing the python dependencies. This was tested with version `3.11`.
+
 ```sh
 pip install -r requirements.txt
 ```
 </details>
 
 For a minimal, single host run (the trailing comma matters!)
+
 ```sh
 ansible-playbook minimal.yml --inventory user@host, --ask-become-pass
 ```
@@ -62,3 +64,4 @@ ansible-playbook minimal.yml --inventory user@host, --ask-become-pass
 [home manager]: https://nix-community.github.io/home-manager/
 [nerd fonts]: https://www.nerdfonts.com/
 [nix]: https://nixos.org/
+[hmrepo]: https://github.com/lpchaim/home-manager
