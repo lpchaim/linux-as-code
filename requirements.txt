@@ -40,7 +40,7 @@ netmiko==4.1.2
 ntc-templates==3.5.0
 openpyxl==3.1.2
 ordered-set==4.1.0
-orjson==3.9.4
+orjson==3.9.15
 packaging==23.1
 paramiko==2.11.0
 passlib==1.7.4
